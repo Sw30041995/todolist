@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {FilterValueType, TaskType} from "./App";
+import {FilterValueType} from "./App";
 import {Task} from "./Task";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
+import {useAppSelector} from "./hooks";
 
 type PropsType = {
     todoListTitle: string
     todoListId: string
-    tasks: TaskType[]
     deleteTodoList: (todoListId: string) => void
     addTask: (todoListId: string, taskTitle: string) => void
     updateTaskStatus: (todoListId: string, taskId: string, taskStatus: boolean) => void
@@ -16,7 +16,9 @@ type PropsType = {
     changeTodoListTitle: (todoListId: string, todoListTitle: string) => void
 }
 
-export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoListTitle, changeTaskTitle, deleteTodoList, ...props}: PropsType) => {
+export const TodoList = ({deleteTask, updateTaskStatus, todoListId, todoListTitle, changeTaskTitle, deleteTodoList, ...props}: PropsType) => {
+
+    const tasks = useAppSelector(state => state.tasks)
 
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
@@ -27,11 +29,11 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
     const changeTaskFilter = (filter: FilterValueType) => {
         setTasksFilter(filter)
     }
-
+    let tasksForTodoLists = tasks[todoListId]
     if (tasksFilter === 'active') {
-        tasks = tasks.filter(t => !t.isDone)
+        tasksForTodoLists = tasks[todoListId].filter(t => !t.isDone)
     } else if (tasksFilter === 'completed') {
-        tasks = tasks.filter(t => t.isDone)
+        tasksForTodoLists = tasks[todoListId].filter(t => t.isDone)
     }
 
     const changeTodoListTitle = (todoListTitle: string) => {
@@ -39,15 +41,16 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
     }
 
     return (
-        <>
+        <div>
             <h3>
                 <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
                 <button onClick={() => deleteTodoList(todoListId)}>X</button>
             </h3>
             <AddItemForm addItem={addTask}/>
-            {tasks.map(t => <Task key={t.id} changeTaskTitle={changeTaskTitle} todoListId={todoListId} task={t}
-                                  updateTaskStatus={updateTaskStatus}
-                                  deleteTask={deleteTask}/>)}
+            {tasksForTodoLists.map(t => <Task key={t.id} changeTaskTitle={changeTaskTitle}
+                                              todoListId={todoListId} task={t}
+                                              updateTaskStatus={updateTaskStatus}
+                                              deleteTask={deleteTask}/>)}
             <div>
                 <button className={tasksFilter === "all" ? 'activeButton' : ''}
                         onClick={() => changeTaskFilter('all')}>All
@@ -59,7 +62,7 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
                         onClick={() => changeTaskFilter('completed')}>Completed
                 </button>
             </div>
-        </>
+        </div>
     )
 }
 
