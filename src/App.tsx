@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {TodoList} from "./TodoList";
+import {AddItemForm} from "./AddItemForm";
 
 export type TaskType = {
     id: string
@@ -51,23 +52,28 @@ function App() {
         setTasks({...tasks, [todoListId]: [{id: v1(), title: taskTitle, isDone: false}, ...tasks[todoListId]]})
     }
 
+    const deleteTodoList = (todoListId: string) => {
+        setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
+    }
+
     const addTodoList = (todoListTitle: string) => {
-        setTodoLists([{id: v1(), title: todoListTitle, filter: 'all'}, ...todoLists])
+        const todoId = v1()
+        setTodoLists([{id: todoId, title: todoListTitle, filter: 'all'}, ...todoLists])
+        setTasks({...tasks, [todoId]: []})
+    }
+
+    const addTodoListWrapper = (todoListTitle: string) => {
+        addTodoList(todoListTitle)
     }
 
     return (
         <div>
-            <div><input type="text"/>
-                <button>+</button>
-            </div>
+            <AddItemForm addItem={addTodoListWrapper}/>
             <div className='App'>
                 {todoLists.map(tl => {
-
-                    let tasksForTodoList = tasks[tl.id]
-
-                    return <TodoList todoListTitle={tl.title} todoListId={tl.id} key={tl.id} tasks={tasksForTodoList}
+                    return <TodoList todoListTitle={tl.title} todoListId={tl.id} key={tl.id} tasks={tasks[tl.id]}
                                      addTask={addTask} updateTaskStatus={updateTaskStatus}
-                                     deleteTask={deleteTask}/>
+                                     deleteTask={deleteTask} deleteTodoList={deleteTodoList}/>
                 })}
             </div>
         </div>

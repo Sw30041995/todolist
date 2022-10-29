@@ -1,27 +1,24 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState} from 'react';
 import {FilterValueType, TaskType} from "./App";
 import {Task} from "./Task";
+import {AddItemForm} from "./AddItemForm";
 
 type PropsType = {
     todoListTitle: string
     todoListId: string
     tasks: TaskType[]
+    deleteTodoList: (todoListId: string) => void
     addTask: (todoListId: string, taskTitle: string) => void
     updateTaskStatus: (todoListId: string, taskId: string, taskStatus: boolean) => void
     deleteTask: (todoListId: string, taskId: string) => void
 }
 
-export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoListTitle, ...props}: PropsType) => {
+export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoListTitle, deleteTodoList, ...props}: PropsType) => {
 
-    const [title, setTitle] = useState('')
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
-    const onInputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value)
-    }
-
-    const addTask = () => {
-        props.addTask(todoListId, title)
+    const addTaskWrapper = (taskTitle: string) => {
+        props.addTask(todoListId, taskTitle)
     }
 
     const changeTaskFilter = (filter: FilterValueType) => {
@@ -36,9 +33,10 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
 
     return (
         <>
-            <h3>{todoListTitle}</h3>
-            <input onChange={onInputChangeHandler} type="text" value={title}/>
-            <button onClick={addTask}>+</button>
+            <h3>{todoListTitle}
+                <button onClick={() => deleteTodoList(todoListId)}>X</button>
+            </h3>
+            <AddItemForm addItem={addTaskWrapper}/>
             {tasks.map(t => <Task key={t.id} todoListId={todoListId} task={t} updateTaskStatus={updateTaskStatus}
                                   deleteTask={deleteTask}/>)}
             <div>
