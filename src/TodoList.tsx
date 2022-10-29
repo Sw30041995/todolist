@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {FilterValueType, TaskType} from "./App";
 import {Task} from "./Task";
 import {AddItemForm} from "./AddItemForm";
+import {EditableSpan} from "./EditableSpan";
 
 type PropsType = {
     todoListTitle: string
@@ -11,9 +12,11 @@ type PropsType = {
     addTask: (todoListId: string, taskTitle: string) => void
     updateTaskStatus: (todoListId: string, taskId: string, taskStatus: boolean) => void
     deleteTask: (todoListId: string, taskId: string) => void
+    changeTaskTitle: (todoListId: string, taskId: string, taskTitle: string) => void
+    changeTodoListTitle: (todoListId: string, todoListTitle: string) => void
 }
 
-export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoListTitle, deleteTodoList, ...props}: PropsType) => {
+export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoListTitle, changeTaskTitle, deleteTodoList, ...props}: PropsType) => {
 
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
@@ -31,13 +34,19 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
         tasks = tasks.filter(t => t.isDone)
     }
 
+    const changeTodoListTitle = (todoListTitle: string) => {
+        props.changeTodoListTitle(todoListId, todoListTitle)
+    }
+
     return (
         <>
-            <h3>{todoListTitle}
+            <h3>
+                <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
                 <button onClick={() => deleteTodoList(todoListId)}>X</button>
             </h3>
             <AddItemForm addItem={addTaskWrapper}/>
-            {tasks.map(t => <Task key={t.id} todoListId={todoListId} task={t} updateTaskStatus={updateTaskStatus}
+            {tasks.map(t => <Task key={t.id} changeTaskTitle={changeTaskTitle} todoListId={todoListId} task={t}
+                                  updateTaskStatus={updateTaskStatus}
                                   deleteTask={deleteTask}/>)}
             <div>
                 <button className={tasksFilter === "all" ? 'activeButton' : ''}

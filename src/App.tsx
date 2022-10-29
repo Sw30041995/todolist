@@ -48,12 +48,20 @@ function App() {
         setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, isDone: taskStatus} : t)})
     }
 
+    const changeTaskTitle = (todoListId: string, taskId: string, TaskTitle: string) => {
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: TaskTitle} : t)})
+    }
+
     const addTask = (todoListId: string, taskTitle: string) => {
         setTasks({...tasks, [todoListId]: [{id: v1(), title: taskTitle, isDone: false}, ...tasks[todoListId]]})
     }
 
     const deleteTodoList = (todoListId: string) => {
         setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
+    }
+
+    const changeTodoListTitle = (todoListId: string, todoListTitle: string) => {
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title: todoListTitle} : tl))
     }
 
     const addTodoList = (todoListTitle: string) => {
@@ -71,9 +79,11 @@ function App() {
             <AddItemForm addItem={addTodoListWrapper}/>
             <div className='App'>
                 {todoLists.map(tl => {
-                    return <TodoList todoListTitle={tl.title} todoListId={tl.id} key={tl.id} tasks={tasks[tl.id]}
+                    return <TodoList changeTaskTitle={changeTaskTitle} todoListTitle={tl.title} todoListId={tl.id}
+                                     key={tl.id} tasks={tasks[tl.id]}
                                      addTask={addTask} updateTaskStatus={updateTaskStatus}
-                                     deleteTask={deleteTask} deleteTodoList={deleteTodoList}/>
+                                     deleteTask={deleteTask} deleteTodoList={deleteTodoList}
+                                     changeTodoListTitle={changeTodoListTitle}/>
                 })}
             </div>
         </div>
