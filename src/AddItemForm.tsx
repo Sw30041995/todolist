@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 type PropsType = {
     addItem: (title: string) => void
@@ -23,9 +23,14 @@ export const AddItemForm = ({addItem}: PropsType) => {
         setTitle('')
     }
 
+    const onEnterPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.code === 'Enter') addItemWrapper()
+    }
+
     return (
         <div>
-            <input className={error ? 'errorInput' : ''} onChange={onInputChangeHandler} value={title} type="text"/>
+            <input className={error ? 'errorInput' : ''} onKeyPress={onEnterPressHandler}
+                   onChange={onInputChangeHandler} value={title} type="text"/>
             <button onClick={addItemWrapper}>+</button>
             {error && <p className='error'>Title Required!</p>}
         </div>

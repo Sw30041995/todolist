@@ -20,7 +20,7 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
 
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
-    const addTaskWrapper = (taskTitle: string) => {
+    const addTask = (taskTitle: string) => {
         props.addTask(todoListId, taskTitle)
     }
 
@@ -44,7 +44,7 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
                 <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
                 <button onClick={() => deleteTodoList(todoListId)}>X</button>
             </h3>
-            <AddItemForm addItem={addTaskWrapper}/>
+            <AddItemForm addItem={addTask}/>
             {tasks.map(t => <Task key={t.id} changeTaskTitle={changeTaskTitle} todoListId={todoListId} task={t}
                                   updateTaskStatus={updateTaskStatus}
                                   deleteTask={deleteTask}/>)}
