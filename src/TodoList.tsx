@@ -40,9 +40,15 @@ export const TodoList = ({tasks, deleteTask, updateTaskStatus, todoListId, todoL
             {tasks.map(t => <Task key={t.id} todoListId={todoListId} task={t} updateTaskStatus={updateTaskStatus}
                                   deleteTask={deleteTask}/>)}
             <div>
-                <button onClick={() => changeTaskFilter('all')}>All</button>
-                <button onClick={() => changeTaskFilter('active')}>Active</button>
-                <button onClick={() => changeTaskFilter('completed')}>Completed</button>
+                <button className={tasksFilter === "all" ? 'activeButton' : ''}
+                        onClick={() => changeTaskFilter('all')}>All
+                </button>
+                <button className={tasksFilter === "active" ? 'activeButton' : ''}
+                        onClick={() => changeTaskFilter('active')}>Active
+                </button>
+                <button className={tasksFilter === "completed" ? 'activeButton' : ''}
+                        onClick={() => changeTaskFilter('completed')}>Completed
+                </button>
             </div>
         </>
     )
