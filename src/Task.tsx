@@ -1,29 +1,38 @@
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import {TaskType} from "./App";
 import {EditableSpan} from "./EditableSpan";
+import {useAppDispatch} from "./hooks";
+import {changeTaskTitleAC, deleteTaskAC, updateTaskStatusAC} from "./reducers/tasksReducer";
 
 type PropsType = {
     todoListId: string
     task: TaskType
-    updateTaskStatus: (todoListId: string, taskId: string, taskStatus: boolean) => void
-    deleteTask: (todoListId: string, taskId: string) => void
-    changeTaskTitle: (todoListId: string, taskId: string, taskTitle: string) => void
 }
 
-export const Task = ({task, updateTaskStatus, deleteTask, todoListId, changeTaskTitle}: PropsType) => {
+export const Task = memo(({task, todoListId}: PropsType) => {
 
-    const changeTaskTitleWrapper = (taskTitle: string) => {
-        changeTaskTitle(todoListId, task.id, taskTitle)
+    console.log('TASK')
+
+    const dispatch = useAppDispatch()
+
+    const deleteTask = (todoListId: string) => {
+        dispatch(deleteTaskAC(todoListId, task.id))
     }
+    const updateTaskStatus = (todoListId: string, taskStatus: boolean) => {
+        dispatch(updateTaskStatusAC(todoListId, task.id, taskStatus))
+    }
+    const changeTaskTitle = useCallback((taskTitle: string) => {
+        dispatch(changeTaskTitleAC(todoListId, task.id, taskTitle))
+    }, [])
 
     return (
         <div>
             <p>
-                <EditableSpan changeTitle={changeTaskTitleWrapper} title={task.title}/>
-                <input onChange={() => updateTaskStatus(todoListId, task.id, !task.isDone)} checked={task.isDone}
+                <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
+                <input onChange={() => updateTaskStatus(todoListId, !task.isDone)} checked={task.isDone}
                        type="checkbox"/>
-                <button onClick={() => deleteTask(todoListId, task.id)}>X</button>
+                <button onClick={() => deleteTask(todoListId)}>X</button>
             </p>
         </div>
     )
-}
+})
