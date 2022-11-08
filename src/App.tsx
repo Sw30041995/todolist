@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {TodoList} from "./TodoList";
 import {AddItemForm} from "./AddItemForm";
 import {useAppDispatch, useAppSelector} from "./hooks";
-import {addTodoListAC} from "./reducers/todoListRedcuer";
+import {addTodoListAC, getTodoLists} from "./reducers/todoListRedcuer";
 
 export type TaskType = {
     id: string
@@ -11,17 +11,16 @@ export type TaskType = {
     isDone: boolean
 }
 export type FilterValueType = 'all' | 'completed' | 'active'
-export type TodoListType = {
-    id: string
-    title: string
-    filter: FilterValueType
-}
 
 function App() {
-    console.log('APP')
 
     const dispatch = useAppDispatch()
     const todoLists = useAppSelector(state => state.todoLists)
+
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(getTodoLists())
+    }, [])
 
     const addTodoList = (todoListTitle: string) => {
         dispatch(addTodoListAC(todoListTitle))
@@ -30,7 +29,9 @@ function App() {
     return (
         <div className='App'>
             <AddItemForm addItem={addTodoList}/>
-            {todoLists.map(tl => <TodoList key={tl.id} todoListTitle={tl.title} todoListId={tl.id}/>)}
+            {todoLists.map(tl => {
+                return <TodoList todoListTitle={tl.title} todoListId={tl.id} key={tl.id}/>
+            })}
         </div>
 
     )

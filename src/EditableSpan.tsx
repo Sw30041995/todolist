@@ -1,12 +1,12 @@
-import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 type PropsType = {
     title: string
     changeTitle: (title: string) => void
 }
 
-export const EditableSpan = memo(({title, ...props}: PropsType) => {
-    console.log('EditableSpan')
+export const EditableSpan = ({title, ...props}: PropsType) => {
+
     const [editMode, setEditMode] = useState(false)
     const [text, setText] = useState(title)
     const [error, setError] = useState(false)
@@ -28,7 +28,6 @@ export const EditableSpan = memo(({title, ...props}: PropsType) => {
         if (e.code === 'Enter') changeTitle()
     }
 
-
     return (
         <>
             {editMode ? <input onKeyPress={onEnterPressHandler} className={error ? 'errorInput' : ''} autoFocus
@@ -38,4 +37,4 @@ export const EditableSpan = memo(({title, ...props}: PropsType) => {
                 <span onDoubleClick={() => setEditMode(true)}>{title}</span>}
         </>
     )
-})
+}

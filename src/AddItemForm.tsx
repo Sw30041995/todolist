@@ -1,11 +1,11 @@
-import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 type PropsType = {
     addItem: (title: string) => void
 }
 
-export const AddItemForm = memo(({addItem}: PropsType) => {
-    console.log('AddItemForm')
+export const AddItemForm = ({addItem}: PropsType) => {
+
     const [title, setTitle] = useState('')
     const [error, setError] = useState(false)
 
@@ -27,7 +27,6 @@ export const AddItemForm = memo(({addItem}: PropsType) => {
         if (e.code === 'Enter') addItemWrapper()
     }
 
-
     return (
         <div>
             <input className={error ? 'errorInput' : ''} onKeyPress={onEnterPressHandler}
@@ -36,4 +35,4 @@ export const AddItemForm = memo(({addItem}: PropsType) => {
             {error && <p className='error'>Title Required!</p>}
         </div>
     )
-})
+}
