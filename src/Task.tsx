@@ -1,8 +1,8 @@
-import React, {memo} from 'react';
-import {TaskType} from "./App";
+import React, {ChangeEvent, memo} from 'react';
 import {EditableSpan} from "./EditableSpan";
-import {changeTaskTitleAC, deleteTaskAC, updateTaskStatusAC} from "./reducers/tasksReducer";
+import {removeTask, updateTask} from "./reducers/tasksReducer";
 import {useAppDispatch} from "./hooks";
+import {TaskStatuses, TaskType} from "./todoListAPI/todoListAPI";
 
 type PropsType = {
     todoListId: string
@@ -13,25 +13,30 @@ export const Task = memo(({task, todoListId}: PropsType) => {
 
     const dispatch = useAppDispatch()
 
-    const deleteTask = (todoListId: string) => {
-        dispatch(deleteTaskAC(todoListId, task.id))
-    }
-
-    const updateTaskStatus = (todoListId: string, taskStatus: boolean) => {
-        dispatch(updateTaskStatusAC(todoListId, task.id, taskStatus))
+    const deleteTask = () => {
+        // @ts-ignore
+        dispatch(removeTask(todoListId, task.id))
     }
 
     const changeTaskTitle = (taskTitle: string) => {
-        dispatch(changeTaskTitleAC(todoListId, task.id, taskTitle))
+        // @ts-ignore
+        dispatch(updateTask(todoListId, task.id, {title: taskTitle}))
+    }
+
+    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore
+        dispatch(updateTask(todoListId, task.id, {
+            status: e.currentTarget.checked ?
+                TaskStatuses.Completed : TaskStatuses.New
+        }))
     }
 
     return (
         <div>
             <p>
+                <input onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed} type="checkbox"/>
                 <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
-                <input onChange={() => updateTaskStatus(todoListId, !task.isDone)} checked={task.isDone}
-                       type="checkbox"/>
-                <button onClick={() => deleteTask(todoListId)}>X</button>
+                <button onClick={deleteTask}>X</button>
             </p>
         </div>
     )

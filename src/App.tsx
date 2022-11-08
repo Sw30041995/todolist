@@ -3,13 +3,8 @@ import './App.css';
 import {TodoList} from "./TodoList";
 import {AddItemForm} from "./AddItemForm";
 import {useAppDispatch, useAppSelector} from "./hooks";
-import {addTodoListAC, getTodoLists} from "./reducers/todoListRedcuer";
+import {createTodoList, getTodoLists} from "./reducers/todoListRedcuer";
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
 export type FilterValueType = 'all' | 'completed' | 'active'
 
 function App() {
@@ -23,15 +18,14 @@ function App() {
     }, [])
 
     const addTodoList = (todoListTitle: string) => {
-        dispatch(addTodoListAC(todoListTitle))
+        // @ts-ignore
+        dispatch(createTodoList(todoListTitle))
     }
 
     return (
         <div className='App'>
             <AddItemForm addItem={addTodoList}/>
-            {todoLists.map(tl => {
-                return <TodoList todoListTitle={tl.title} todoListId={tl.id} key={tl.id}/>
-            })}
+            {todoLists.map(tl => <TodoList key={tl.id} todoListTitle={tl.title} todoListId={tl.id}/>)}
         </div>
 
     )

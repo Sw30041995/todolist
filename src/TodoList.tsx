@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FilterValueType} from "./App";
 import {Task} from "./Task";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {useAppDispatch, useAppSelector} from "./hooks";
-import {addTaskAC} from "./reducers/tasksReducer";
-import {changeTodoListTitleAC, deleteTodoListAC} from "./reducers/todoListRedcuer";
+import {deleteTodoList, updateTodoListTitle} from "./reducers/todoListRedcuer";
+import {TaskStatuses} from "./todoListAPI/todoListAPI";
+import {createTask, getTasks} from "./reducers/tasksReducer";
 
 type PropsType = {
     todoListTitle: string
@@ -14,41 +15,48 @@ type PropsType = {
 
 export const TodoList = ({todoListId, todoListTitle}: PropsType) => {
 
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(getTasks(todoListId))
+    }, [])
+
     const dispatch = useAppDispatch()
     const tasks = useAppSelector(state => state.tasks)
 
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
     const addTask = (taskTitle: string) => {
-        dispatch(addTaskAC(todoListId, taskTitle))
+        // @ts-ignore
+        dispatch(createTask(todoListId, taskTitle))
     }
     const changeTaskFilter = (filter: FilterValueType) => {
         setTasksFilter(filter)
     }
 
-
-    const deleteTodoList = (todoListId: string) => {
-        dispatch(deleteTodoListAC(todoListId))
+    const removeTodoList = () => {
+        // @ts-ignore
+        dispatch(deleteTodoList(todoListId))
     }
     const changeTodoListTitle = (todoListTitle: string) => {
-        dispatch(changeTodoListTitleAC(todoListId, todoListTitle))
+        // @ts-ignore
+        dispatch(updateTodoListTitle(todoListId, todoListTitle))
     }
 
     let tasksForTodoLists = tasks[todoListId]
     if (tasksFilter === 'active') {
-        tasksForTodoLists = tasks[todoListId].filter(t => !t.isDone)
+        tasksForTodoLists = tasks[todoListId].filter(t => t.status === TaskStatuses.New)
     } else if (tasksFilter === 'completed') {
-        tasksForTodoLists = tasks[todoListId].filter(t => t.isDone)
+        tasksForTodoLists = tasks[todoListId].filter(t => t.status === TaskStatuses.Completed)
     }
 
     return (
         <div>
             <h3>
                 <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
-                <button onClick={() => deleteTodoList(todoListId)}>X</button>
+                <button onClick={removeTodoList}>X</button>
             </h3>
             <AddItemForm addItem={addTask}/>
-            {tasksForTodoLists.map(t => <Task key={t.id} todoListId={todoListId} task={t}/>)}
+            {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} todoListId={todoListId} task={t}/>)}
             <div>
                 <button className={tasksFilter === "all" ? 'activeButton' : ''}
                         onClick={() => changeTaskFilter('all')}>All
