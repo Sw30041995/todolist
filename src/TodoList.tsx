@@ -16,7 +16,6 @@ type PropsType = {
 export const TodoList = ({todoListId, todoListTitle}: PropsType) => {
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(getTasks(todoListId))
     }, [])
 
@@ -26,7 +25,6 @@ export const TodoList = ({todoListId, todoListTitle}: PropsType) => {
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
     const addTask = (taskTitle: string) => {
-        // @ts-ignore
         dispatch(createTask(todoListId, taskTitle))
     }
     const changeTaskFilter = (filter: FilterValueType) => {
@@ -34,11 +32,9 @@ export const TodoList = ({todoListId, todoListTitle}: PropsType) => {
     }
 
     const removeTodoList = () => {
-        // @ts-ignore
         dispatch(deleteTodoList(todoListId))
     }
     const changeTodoListTitle = (todoListTitle: string) => {
-        // @ts-ignore
         dispatch(updateTodoListTitle(todoListId, todoListTitle))
     }
 

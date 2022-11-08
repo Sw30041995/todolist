@@ -13,12 +13,10 @@ function App() {
     const todoLists = useAppSelector(state => state.todoLists)
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(getTodoLists())
     }, [])
 
     const addTodoList = (todoListTitle: string) => {
-        // @ts-ignore
         dispatch(createTodoList(todoListTitle))
     }
 

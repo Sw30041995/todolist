@@ -14,17 +14,14 @@ export const Task = memo(({task, todoListId}: PropsType) => {
     const dispatch = useAppDispatch()
 
     const deleteTask = () => {
-        // @ts-ignore
         dispatch(removeTask(todoListId, task.id))
     }
 
     const changeTaskTitle = (taskTitle: string) => {
-        // @ts-ignore
         dispatch(updateTask(todoListId, task.id, {title: taskTitle}))
     }
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        // @ts-ignore
         dispatch(updateTask(todoListId, task.id, {
             status: e.currentTarget.checked ?
                 TaskStatuses.Completed : TaskStatuses.New
