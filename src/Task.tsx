@@ -1,15 +1,17 @@
 import React, {ChangeEvent, memo} from 'react';
 import {EditableSpan} from "./EditableSpan";
-import {removeTask, updateTask} from "./reducers/tasksReducer";
+import {removeTask, TaskEntityStatusType, TaskType, updateTask} from "./reducers/tasksReducer";
 import {useAppDispatch} from "./hooks";
-import {TaskStatuses, TaskType} from "./todoListAPI/todoListAPI";
+import {TaskStatuses} from "./todoListAPI/todoListAPI";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type PropsType = {
     todoListId: string
     task: TaskType
+    entityStatus: TaskEntityStatusType
 }
 
-export const Task = memo(({task, todoListId}: PropsType) => {
+export const Task = memo(({task, todoListId, entityStatus}: PropsType) => {
 
     const dispatch = useAppDispatch()
 
@@ -31,9 +33,11 @@ export const Task = memo(({task, todoListId}: PropsType) => {
     return (
         <div>
             <p>
-                <input onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed} type="checkbox"/>
+                {entityStatus === 'checkboxLoading' ? <CircularProgress size="0.8rem" color="inherit"/> :
+                    <input onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed}
+                           type="checkbox"/>}
                 <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
-                <button onClick={deleteTask}>X</button>
+                <button disabled={entityStatus === 'buttonLoading'} onClick={deleteTask}>X</button>
             </p>
         </div>
     )

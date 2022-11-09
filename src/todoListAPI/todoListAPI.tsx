@@ -10,10 +10,10 @@ const instance = axios.create({
 
 export const todoListAPI = {
     getTodoLists() {
-        return instance.get<TodoListType[]>('todo-lists')
+        return instance.get<TodoListResponseType[]>('todo-lists')
     },
     createTodoList(todoListTitle: string) {
-        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TodoListType }>>>('todo-lists',
+        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TodoListResponseType }>>>('todo-lists',
             {title: todoListTitle})
     },
     deleteTodoList(todoListId: string) {
@@ -27,21 +27,21 @@ export const todoListAPI = {
 
 export const taskAPI = {
     getTasks(todoListId: string) {
-        return instance.get<{ items: TaskType[] }>(`todo-lists/${todoListId}/tasks`)
+        return instance.get<{ items: TaskResponseType[] }>(`todo-lists/${todoListId}/tasks`)
     },
     createTask(todoListId: string, taskTitle: string) {
-        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TaskType }>>>(`todo-lists/${todoListId}/tasks`,
+        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TaskResponseType }>>>(`todo-lists/${todoListId}/tasks`,
             {title: taskTitle})
     },
     deleteTask(todoListId: string, taskId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todoListId}/tasks/${taskId}`)
     },
     updateTask(todoListId: string, taskId: string, taskData: UpdateTaskModelType) {
-        return instance.put<UpdateTaskModelType, AxiosResponse<ResponseType<{item: TaskType}>>>(`todo-lists/${todoListId}/tasks/${taskId}`, taskData)
+        return instance.put<UpdateTaskModelType, AxiosResponse<ResponseType<{item: TaskResponseType}>>>(`todo-lists/${todoListId}/tasks/${taskId}`, taskData)
     }
 }
 
-export type TodoListType = {
+export type TodoListResponseType = {
     id: string
     title: string
     addedDate: string
@@ -74,7 +74,7 @@ export type UpdateDomainTaskModelType = {
     deadline?: string
 }
 
-export type TaskType = {
+export type TaskResponseType = {
     description: string
     title: string
     completed: boolean

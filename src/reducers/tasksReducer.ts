@@ -1,7 +1,8 @@
 import {v1} from "uuid";
 import {AddTodoListActionType, DeleteTodoListActionType} from "./todoListRedcuer";
-import {taskAPI, TaskType, UpdateDomainTaskModelType, UpdateTaskModelType} from "../todoListAPI/todoListAPI";
+import {taskAPI, TaskResponseType, UpdateDomainTaskModelType, UpdateTaskModelType} from "../todoListAPI/todoListAPI";
 import {AppThunk} from "../store/store";
+import {setAppStatusAC} from "./appRedcuer";
 
 export type TasksActionsType =
     DeleteTaskActionType
@@ -10,15 +11,27 @@ export type TasksActionsType =
     | AddTodoListActionType
     | DeleteTodoListActionType
     | SetTasksActionType
+    | ChangeEntityTaskStatusActionType
 
 const initialState: initialStateType = {}
 
 type initialStateType = { [key: string]: TaskType[] }
+export type TaskType = TaskResponseType & { entityStatus: TaskEntityStatusType }
+export type TaskEntityStatusType = 'checkboxLoading' | 'buttonLoading' | 'idle'
 
 export const tasksReducer = (state = initialState, action: TasksActionsType): initialStateType => {
     switch (action.type) {
         case "TASKS/SET-TASKS": {
-            return {...state, [action.payload.todoListId]: [...action.payload.tasks]}
+            return {
+                ...state, [action.payload.todoListId]: action.payload.tasks.map(t => ({...t, entityStatus: 'idle'}))
+            }
+        }
+        case "TASKS/CHANGE-ENTITY-TASK-STATUS": {
+            return {
+                ...state,
+                [action.payload.todoListId]: state[action.payload.todoListId].map(t => t.id === action.payload.taskId ?
+                    {...t, entityStatus: action.payload.status} : t)
+            }
         }
         case "TASKS/DELETE-TASK": {
             return {
@@ -35,7 +48,11 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): in
         }
         case "TASKS/ADD-TASK": {
             return {
-                ...state, [action.payload.todoListId]: [{...action.payload.task}, ...state[action.payload.todoListId]]
+                ...state,
+                [action.payload.todoListId]: [{
+                    ...action.payload.task,
+                    entityStatus: 'idle'
+                }, ...state[action.payload.todoListId]]
             }
         }
         case "TODOLISTS/ADD-TODOLIST": {
@@ -54,6 +71,7 @@ type DeleteTaskActionType = ReturnType<typeof deleteTaskAC>
 type UpdateTaskActionType = ReturnType<typeof updateTaskAC>
 type AddTaskActionType = ReturnType<typeof addTaskAC>
 type SetTasksActionType = ReturnType<typeof setTasks>
+type ChangeEntityTaskStatusActionType = ReturnType<typeof changeEntityTaskStatus>
 
 export const deleteTaskAC = (todoListId: string, taskId: string) => ({
     type: 'TASKS/DELETE-TASK',
@@ -70,18 +88,27 @@ export const updateTaskAC = (todoListId: string, taskId: string, taskModel: Upda
         taskModel
     }
 } as const)
-export const addTaskAC = (todoListId: string, task: TaskType) => ({
+export const addTaskAC = (todoListId: string, task: TaskResponseType) => ({
     type: 'TASKS/ADD-TASK',
     payload: {todoListId, task}
 } as const)
-export const setTasks = (todoListId: string, tasks: TaskType[]) => ({
+export const setTasks = (todoListId: string, tasks: TaskResponseType[]) => ({
     type: 'TASKS/SET-TASKS',
     payload: {todoListId, tasks}
 } as const)
+export const changeEntityTaskStatus = (todoListId: string, taskId: string, status: TaskEntityStatusType) => ({
+    type: 'TASKS/CHANGE-ENTITY-TASK-STATUS',
+    payload: {todoListId, taskId, status}
+} as const)
+
 
 export const getTasks = (todoListId: string): AppThunk => (dispatch) => {
+    dispatch(setAppStatusAC("loading"))
     taskAPI.getTasks(todoListId)
-        .then(res => dispatch(setTasks(todoListId, res.data.items)))
+        .then(res => {
+            dispatch(setTasks(todoListId, res.data.items))
+            dispatch(setAppStatusAC("succeeded"))
+        })
 }
 
 export const createTask = (todoListId: string, taskTitle: string): AppThunk => (dispatch) => {
@@ -90,13 +117,17 @@ export const createTask = (todoListId: string, taskTitle: string): AppThunk => (
 }
 
 export const removeTask = (todoListId: string, taskId: string): AppThunk => (dispatch) => {
+    dispatch(changeEntityTaskStatus(todoListId, taskId, 'buttonLoading'))
     taskAPI.deleteTask(todoListId, taskId)
-        .then(() => dispatch(deleteTaskAC(todoListId, taskId)))
+        .then(() => {
+            dispatch(deleteTaskAC(todoListId, taskId))
+            dispatch(changeEntityTaskStatus(todoListId, taskId, 'idle'))
+        })
 }
 
 export const updateTask = (todoListId: string, taskId: string, taskData: UpdateDomainTaskModelType): AppThunk =>
     (dispatch, getState) => {
-
+        dispatch(changeEntityTaskStatus(todoListId, taskId, 'checkboxLoading'))
         const task = getState().tasks[todoListId].find(t => t.id === taskId)
         if (!task) {
             return
@@ -112,6 +143,9 @@ export const updateTask = (todoListId: string, taskId: string, taskData: UpdateD
             ...taskData
         }
         taskAPI.updateTask(todoListId, taskId, taskModel)
-            .then(() => dispatch(updateTaskAC(todoListId, taskId, taskData)))
+            .then(() => {
+                dispatch(updateTaskAC(todoListId, taskId, taskData))
+                dispatch(changeEntityTaskStatus(todoListId, taskId, 'idle'))
+            })
     }
 

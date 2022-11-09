@@ -7,13 +7,16 @@ import {useAppDispatch, useAppSelector} from "./hooks";
 import {deleteTodoList, updateTodoListTitle} from "./reducers/todoListRedcuer";
 import {TaskStatuses} from "./todoListAPI/todoListAPI";
 import {createTask, getTasks} from "./reducers/tasksReducer";
+import ButtonGroup from '@mui/material/ButtonGroup/ButtonGroup';
+import Button from '@mui/material/Button/Button';
 
 type PropsType = {
     todoListTitle: string
     todoListId: string
+    entityTodoStatus: boolean
 }
 
-export const TodoList = ({todoListId, todoListTitle}: PropsType) => {
+export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsType) => {
 
     useEffect(() => {
         dispatch(getTasks(todoListId))
@@ -46,23 +49,23 @@ export const TodoList = ({todoListId, todoListTitle}: PropsType) => {
     }
 
     return (
-        <div>
+        <div className='todoList'>
             <h3>
                 <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
-                <button onClick={removeTodoList}>X</button>
+                <button disabled={entityTodoStatus} onClick={removeTodoList}>X</button>
             </h3>
             <AddItemForm addItem={addTask}/>
-            {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} todoListId={todoListId} task={t}/>)}
+            {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} entityStatus={t.entityStatus}
+                                                                   todoListId={todoListId} task={t}/>)}
             <div>
-                <button className={tasksFilter === "all" ? 'activeButton' : ''}
-                        onClick={() => changeTaskFilter('all')}>All
-                </button>
-                <button className={tasksFilter === "active" ? 'activeButton' : ''}
-                        onClick={() => changeTaskFilter('active')}>Active
-                </button>
-                <button className={tasksFilter === "completed" ? 'activeButton' : ''}
-                        onClick={() => changeTaskFilter('completed')}>Completed
-                </button>
+                <ButtonGroup color="secondary">
+                    <Button variant={tasksFilter === "all" ? 'contained' : 'outlined'}
+                            onClick={() => changeTaskFilter('all')}>All</Button>
+                    <Button variant={tasksFilter === "active" ? 'contained' : 'outlined'}
+                            onClick={() => changeTaskFilter('active')}>Active</Button>
+                    <Button variant={tasksFilter === "completed" ? 'contained' : 'outlined'}
+                            onClick={() => changeTaskFilter('completed')}>Completed</Button>
+                </ButtonGroup>
             </div>
         </div>
     )

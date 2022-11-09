@@ -1,4 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import TextField from "@mui/material/TextField/TextField";
 
 type PropsType = {
     addItem: (title: string) => void
@@ -29,10 +30,11 @@ export const AddItemForm = ({addItem}: PropsType) => {
 
     return (
         <div>
-            <input className={error ? 'errorInput' : ''} onKeyPress={onEnterPressHandler}
-                   onChange={onInputChangeHandler} value={title} type="text"/>
+            <TextField error={error} size='small' label={error ? 'Field cannot be empty' : 'Enter your text'}
+                       color='secondary'
+                       onKeyPress={onEnterPressHandler}
+                       onChange={onInputChangeHandler} value={title} variant="outlined"/>
             <button onClick={addItemWrapper}>+</button>
-            {error && <p className='error'>Title Required!</p>}
         </div>
     )
 }

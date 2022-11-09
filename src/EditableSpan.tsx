@@ -1,4 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import TextField from "@mui/material/TextField/TextField";
 
 type PropsType = {
     title: string
@@ -13,6 +14,7 @@ export const EditableSpan = ({title, ...props}: PropsType) => {
 
     const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setText(e.currentTarget.value)
+        setError(false)
     }
 
     const changeTitle = () => {
@@ -30,10 +32,10 @@ export const EditableSpan = ({title, ...props}: PropsType) => {
 
     return (
         <>
-            {editMode ? <input onKeyPress={onEnterPressHandler} className={error ? 'errorInput' : ''} autoFocus
-                               onBlur={changeTitle}
-                               onChange={onChangeTitleHandler} value={text}
-                               type="text"/> :
+            {editMode ? <TextField variant="outlined" color='secondary'
+                                   label={error ? 'Field cannot be empty' : 'Enter your text'} error={error}
+                                   size='small' onKeyPress={onEnterPressHandler} autoFocus
+                                   onBlur={changeTitle} onChange={onChangeTitleHandler} value={text}/> :
                 <span onDoubleClick={() => setEditMode(true)}>{title}</span>}
         </>
     )
