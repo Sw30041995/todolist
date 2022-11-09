@@ -30,7 +30,7 @@ function App() {
             </div>
             <div className='App'>
                 <div className='todosForm'>
-                    <AddItemForm addItem={addTodoList}/>
+                    <AddItemForm addItem={addTodoList} />
                 </div>
                 <div className='todoLists'>
                     {todoLists.map(tl => <TodoList key={tl.id} todoListTitle={tl.title} todoListId={tl.id}

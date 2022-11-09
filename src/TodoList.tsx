@@ -9,6 +9,8 @@ import {TaskStatuses} from "./todoListAPI/todoListAPI";
 import {createTask, getTasks} from "./reducers/tasksReducer";
 import ButtonGroup from '@mui/material/ButtonGroup/ButtonGroup';
 import Button from '@mui/material/Button/Button';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {IconButton} from "@mui/material";
 
 type PropsType = {
     todoListTitle: string
@@ -52,9 +54,11 @@ export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsTyp
         <div className='todoList'>
             <h3>
                 <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
-                <button disabled={entityTodoStatus} onClick={removeTodoList}>X</button>
+                <IconButton onClick={removeTodoList} color='inherit' disabled={entityTodoStatus}>
+                    <DeleteForeverIcon fontSize="medium" />
+                </IconButton>
             </h3>
-            <AddItemForm addItem={addTask}/>
+            <AddItemForm addItem={addTask} entityTodoStatus={entityTodoStatus}/>
             {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} entityStatus={t.entityStatus}
                                                                    todoListId={todoListId} task={t}/>)}
             <div>

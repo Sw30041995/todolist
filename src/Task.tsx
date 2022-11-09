@@ -4,6 +4,8 @@ import {removeTask, TaskEntityStatusType, TaskType, updateTask} from "./reducers
 import {useAppDispatch} from "./hooks";
 import {TaskStatuses} from "./todoListAPI/todoListAPI";
 import CircularProgress from "@mui/material/CircularProgress";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import {Checkbox, IconButton} from "@mui/material";
 
 type PropsType = {
     todoListId: string
@@ -33,11 +35,12 @@ export const Task = memo(({task, todoListId, entityStatus}: PropsType) => {
     return (
         <div>
             <p>
-                {entityStatus === 'checkboxLoading' ? <CircularProgress size="0.8rem" color="inherit"/> :
-                    <input onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed}
-                           type="checkbox"/>}
+                {entityStatus === 'checkboxLoading' ? <CircularProgress size="1.1rem" color="inherit"/> :
+                <Checkbox onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed} color="secondary" />}
                 <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
-                <button disabled={entityStatus === 'buttonLoading'} onClick={deleteTask}>X</button>
+                <IconButton onClick={deleteTask} color='inherit' disabled={entityStatus === 'buttonLoading'}>
+                    <DeleteForeverIcon fontSize="small" />
+                </IconButton>
             </p>
         </div>
     )

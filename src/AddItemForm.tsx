@@ -1,11 +1,14 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import TextField from "@mui/material/TextField/TextField";
+import AddIcon from '@mui/icons-material/Add';
+import {IconButton} from "@mui/material";
 
 type PropsType = {
     addItem: (title: string) => void
+    entityTodoStatus?: boolean
 }
 
-export const AddItemForm = ({addItem}: PropsType) => {
+export const AddItemForm = ({addItem, entityTodoStatus}: PropsType) => {
 
     const [title, setTitle] = useState('')
     const [error, setError] = useState(false)
@@ -30,11 +33,14 @@ export const AddItemForm = ({addItem}: PropsType) => {
 
     return (
         <div>
-            <TextField error={error} size='small' label={error ? 'Field cannot be empty' : 'Enter your text'}
+            <TextField disabled={entityTodoStatus} error={error} size='small'
+                       label={error ? 'Field cannot be empty' : 'Enter your text'}
                        color='secondary'
                        onKeyPress={onEnterPressHandler}
                        onChange={onInputChangeHandler} value={title} variant="outlined"/>
-            <button onClick={addItemWrapper}>+</button>
+            <IconButton onClick={addItemWrapper} color='inherit'>
+                <AddIcon/>
+            </IconButton>
         </div>
     )
 }
