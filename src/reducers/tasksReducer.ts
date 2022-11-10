@@ -1,8 +1,8 @@
 import {v1} from "uuid";
-import {AddTodoListActionType, DeleteTodoListActionType} from "./todoListRedcuer";
+import {AddTodoListActionType, DeleteTodoListActionType} from "./todoListReducer";
 import {taskAPI, TaskResponseType, UpdateDomainTaskModelType, UpdateTaskModelType} from "../todoListAPI/todoListAPI";
 import {AppThunk} from "../store/store";
-import {setAppStatusAC} from "./appRedcuer";
+import {setAppStatusAC, setErrorAC} from "./appReducer";
 
 export type TasksActionsType =
     DeleteTaskActionType
@@ -109,11 +109,27 @@ export const getTasks = (todoListId: string): AppThunk => (dispatch) => {
             dispatch(setTasks(todoListId, res.data.items))
             dispatch(setAppStatusAC("succeeded"))
         })
+        .catch(e => {
+            dispatch(setErrorAC(e.message))
+        })
 }
 
 export const createTask = (todoListId: string, taskTitle: string): AppThunk => (dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     taskAPI.createTask(todoListId, taskTitle)
-        .then(res => dispatch(addTaskAC(todoListId, res.data.data.item)))
+        .then(res => {
+            if (res.data.resultCode === 0) {
+                dispatch(addTaskAC(todoListId, res.data.data.item))
+            } else {
+                dispatch(setErrorAC(res.data.messages[0]))
+            }
+        })
+        .catch((e) => {
+            dispatch(setErrorAC(e.message))
+        })
+        .finally(() => {
+            dispatch(setAppStatusAC('idle'))
+        })
 }
 
 export const removeTask = (todoListId: string, taskId: string): AppThunk => (dispatch) => {
@@ -122,6 +138,9 @@ export const removeTask = (todoListId: string, taskId: string): AppThunk => (dis
         .then(() => {
             dispatch(deleteTaskAC(todoListId, taskId))
             dispatch(changeEntityTaskStatus(todoListId, taskId, 'idle'))
+        })
+        .catch(e => {
+            dispatch(setErrorAC(e.message))
         })
 }
 
@@ -146,6 +165,9 @@ export const updateTask = (todoListId: string, taskId: string, taskData: UpdateD
             .then(() => {
                 dispatch(updateTaskAC(todoListId, taskId, taskData))
                 dispatch(changeEntityTaskStatus(todoListId, taskId, 'idle'))
+            })
+            .catch(e => {
+                dispatch(setErrorAC(e.message))
             })
     }
 

@@ -34,14 +34,14 @@ export const Task = memo(({task, todoListId, entityStatus}: PropsType) => {
 
     return (
         <div>
-            <p>
-                {entityStatus === 'checkboxLoading' ? <CircularProgress size="1.1rem" color="inherit"/> :
-                <Checkbox onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed} color="secondary" />}
-                <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
-                <IconButton onClick={deleteTask} color='inherit' disabled={entityStatus === 'buttonLoading'}>
-                    <DeleteForeverIcon fontSize="small" />
-                </IconButton>
-            </p>
+            {entityStatus === 'checkboxLoading' ?
+                <span className='loader'><CircularProgress size="1.1rem" color="inherit"/></span> :
+                <Checkbox onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed}
+                          color="secondary"/>}
+            <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
+            <IconButton onClick={deleteTask} color='inherit' disabled={entityStatus === 'buttonLoading'}>
+                <DeleteForeverIcon fontSize="small"/>
+            </IconButton>
         </div>
     )
 })

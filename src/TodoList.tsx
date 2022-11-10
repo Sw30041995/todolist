@@ -4,18 +4,19 @@ import {Task} from "./Task";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {useAppDispatch, useAppSelector} from "./hooks";
-import {deleteTodoList, updateTodoListTitle} from "./reducers/todoListRedcuer";
+import {deleteTodoList, TodoEntityStatusType, updateTodoListTitle} from "./reducers/todoListReducer";
 import {TaskStatuses} from "./todoListAPI/todoListAPI";
 import {createTask, getTasks} from "./reducers/tasksReducer";
 import ButtonGroup from '@mui/material/ButtonGroup/ButtonGroup';
 import Button from '@mui/material/Button/Button';
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {IconButton} from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type PropsType = {
     todoListTitle: string
     todoListId: string
-    entityTodoStatus: boolean
+    entityTodoStatus: TodoEntityStatusType
 }
 
 export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsType) => {
@@ -52,17 +53,20 @@ export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsTyp
 
     return (
         <div className='todoList'>
-            <h3>
-                <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
-                <IconButton onClick={removeTodoList} color='inherit' disabled={entityTodoStatus}>
-                    <DeleteForeverIcon fontSize="medium" />
-                </IconButton>
-            </h3>
-            <AddItemForm addItem={addTask} entityTodoStatus={entityTodoStatus}/>
+            {entityTodoStatus === 'titleLoading' ?
+                <h3 className='todoLoader'><CircularProgress size="1.5rem" color="inherit"/></h3> :
+                <h3 className='todoTitle'>
+                    <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
+                    <IconButton onClick={removeTodoList} color='inherit'
+                                disabled={entityTodoStatus === 'buttonLoading'}>
+                        <DeleteForeverIcon fontSize="medium"/>
+                    </IconButton>
+                </h3>}
+            <AddItemForm addItem={addTask} entityTodoStatus={entityTodoStatus === 'buttonLoading'}/>
             {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} entityStatus={t.entityStatus}
                                                                    todoListId={todoListId} task={t}/>)}
-            <div>
-                <ButtonGroup color="secondary">
+            <div className='filterButtons'>
+                <ButtonGroup size='small' color="secondary">
                     <Button variant={tasksFilter === "all" ? 'contained' : 'outlined'}
                             onClick={() => changeTaskFilter('all')}>All</Button>
                     <Button variant={tasksFilter === "active" ? 'contained' : 'outlined'}

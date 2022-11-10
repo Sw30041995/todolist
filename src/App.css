@@ -7,6 +7,19 @@
 .header {
     height: 100px;
     background-color: #2d2b2b;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.header a {
+  text-decoration: none;
+    color: white;
+}
+.header a:hover {
+  color: #9c27b0;
+}
+.header h2 {
+    margin: 0 60px 0 0;
 }
 
 .progressBar {
@@ -16,6 +29,10 @@
 .todoLists {
     display: flex;
     flex-wrap: wrap;
+}
+
+.todoTitle {
+    text-align: center;
 }
 
 .todosForm {
@@ -29,6 +46,18 @@
     background-color: white;
 }
 
-.activeButton {
-    background-color: aquamarine;
+.filterButtons {
+    display: flex;
+    justify-content: center;
+}
+
+.loader {
+    margin: 0 15px 0 10px;
+    position: relative;
+    top: 5px;
+}
+
+.todoLoader {
+    display: flex;
+    justify-content: center;
 }

@@ -36,7 +36,7 @@ export const EditableSpan = ({title, ...props}: PropsType) => {
                                    label={error ? 'Field cannot be empty' : 'Enter your text'} error={error}
                                    size='small' onKeyPress={onEnterPressHandler} autoFocus
                                    onBlur={changeTitle} onChange={onChangeTitleHandler} value={text}/> :
-                <span onDoubleClick={() => setEditMode(true)}>{title}</span>}
+                <span title='Double click to edit' onDoubleClick={() => setEditMode(true)}>{title}</span>}
         </>
     )
 }
