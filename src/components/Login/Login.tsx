@@ -3,10 +3,10 @@ import TextField from '@mui/material/TextField/TextField';
 import React, {useState} from 'react';
 import {useFormik} from "formik";
 import {Navigate} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "./hooks";
-import {LoginDataType} from "./todoListAPI/todoListAPI";
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {LoginDataType} from "../../todoListAPI/todoListAPI";
 import Checkbox from '@mui/material/Checkbox/Checkbox';
-import {login} from "./reducers/authReducer";
+import {login} from "../../reducers/authReducer";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 

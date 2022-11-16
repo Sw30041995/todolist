@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
-import {AddItemForm} from "./AddItemForm";
-import {TodoList} from "./TodoList";
-import {createTodoList, getTodoLists} from "./reducers/todoListReducer";
-import {useAppDispatch, useAppSelector} from "./hooks";
+import {AddItemForm} from "../../common components/AddItemForm";
+import {TodoList} from "./TodoList/TodoList";
+import {createTodoList, getTodoLists} from "../../reducers/todoListReducer";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {Navigate} from 'react-router-dom';
 
 export const TodoListsList = () => {

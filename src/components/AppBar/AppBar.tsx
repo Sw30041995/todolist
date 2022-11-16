@@ -1,6 +1,6 @@
 import React from 'react';
-import {useAppDispatch, useAppSelector} from "./hooks";
-import {logoutTC} from "./reducers/authReducer";
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {logoutTC} from "../../reducers/authReducer";
 
 export const AppBar = () => {
 

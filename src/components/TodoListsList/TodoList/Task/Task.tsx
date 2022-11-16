@@ -1,8 +1,8 @@
 import React, {ChangeEvent, memo} from 'react';
-import {EditableSpan} from "./EditableSpan";
-import {removeTask, TaskType, updateTask} from "./reducers/tasksReducer";
-import {useAppDispatch} from "./hooks";
-import {TaskStatuses} from "./todoListAPI/todoListAPI";
+import {EditableSpan} from "../../../../common components/EditableSpan";
+import {removeTask, TaskType, updateTask} from "../../../../reducers/tasksReducer";
+import {useAppDispatch} from "../../../../hooks";
+import {TaskStatuses} from "../../../../todoListAPI/todoListAPI";
 import CircularProgress from "@mui/material/CircularProgress";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {Checkbox, IconButton} from "@mui/material";

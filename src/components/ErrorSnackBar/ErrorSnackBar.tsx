@@ -1,8 +1,8 @@
 import React, {SyntheticEvent} from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert/Alert';
-import {useAppDispatch, useAppSelector} from "./hooks";
-import {setErrorAC} from "./reducers/appReducer";
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {setErrorAC} from "../../reducers/appReducer";
 
 export function ErrorSnackbar() {
 

@@ -2,11 +2,11 @@ import React, {useEffect} from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from "./hooks";
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
-import {ErrorSnackbar} from "./ErrorSnackBar";
-import {TodoListsList} from "./TodoListsList";
-import {AppBar} from './AppBar';
+import {ErrorSnackbar} from "./components/ErrorSnackBar/ErrorSnackBar";
+import {TodoListsList} from "./components/TodoListsList/TodoListsList";
+import {AppBar} from './components/AppBar/AppBar';
 import {Route, Routes} from 'react-router-dom';
-import {Login} from './Login';
+import {Login} from './components/Login/Login';
 import {initializeAppTC} from "./reducers/authReducer";
 import {CircularProgress} from "@mui/material";
 
