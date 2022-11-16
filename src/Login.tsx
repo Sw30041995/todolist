@@ -1,12 +1,14 @@
 import Button from '@mui/material/Button/Button';
 import TextField from '@mui/material/TextField/TextField';
-import React from 'react';
+import React, {useState} from 'react';
 import {useFormik} from "formik";
 import {Navigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "./hooks";
 import {LoginDataType} from "./todoListAPI/todoListAPI";
 import Checkbox from '@mui/material/Checkbox/Checkbox';
 import {login} from "./reducers/authReducer";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 type ErrorsType = {
     email: string
@@ -17,6 +19,7 @@ export const Login = () => {
 
     const dispatch = useAppDispatch()
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+    const [viewMode, setViewMode] = useState(false)
 
     const validate = (values: LoginDataType) => {
         const errors = {} as ErrorsType
@@ -64,10 +67,14 @@ export const Login = () => {
 
                 <label htmlFor="password">Password:</label>
                 <div className='inputBlock'>
-                    <TextField color='secondary' id="password" type="password" label='Password'
+                    <TextField color='secondary' id="password" type={viewMode ? 'text' : 'password'} label='Password'
                                {...formik.getFieldProps('password')}/>
                     {formik.touched.password && formik.errors.password &&
                     <span className='loginError'>{formik.errors.password}</span>}
+                        {viewMode ? <VisibilityOffOutlinedIcon className='viewMode' onClick={() => setViewMode(false)}
+                                                               fontSize='small'/> :
+                            <VisibilityOutlinedIcon className='viewMode' onClick={() => setViewMode(true)}
+                                                    fontSize='small'/>}
                 </div>
 
                 <div className='checkboxBlock'>
