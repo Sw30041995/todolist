@@ -29,7 +29,7 @@ export const Task = memo(({task, todoListId}: PropsType) => {
     }
 
     return (
-        <div>
+        <div className='task'>
             {task.entityStatus === 'checkboxLoading' ?
                 <span className='loader'><CircularProgress size="1.1rem" color="inherit"/></span> :
                 <Checkbox disabled={lockEditMode} onChange={onChangeHandler}

@@ -46,17 +46,17 @@ export const TodoList = ({todoListId, todoListTitle, todoEntityStatus}: PropsTyp
 
     return (
         <div className='todoList'>
-                {todoEntityStatus === 'titleLoading' ?
-                    <h3 className='todoLoader'>
-                        <CircularProgress size="1.5rem" color="inherit"/>
-                    </h3> :
-                    <h3 className='todoTitle'>
-                        <EditableSpan lockEditMode={lockEditMode} changeTitle={changeTodoListTitle} title={todoListTitle}/>
-                        <IconButton onClick={removeTodoList} color='inherit'
-                                    disabled={todoEntityStatus === 'buttonLoading'}>
-                            <DeleteForeverIcon fontSize="medium"/>
-                        </IconButton>
-                    </h3>}
+            {todoEntityStatus === 'titleLoading' ?
+                <h3 className='todoLoader'>
+                    <CircularProgress size="1.5rem" color="inherit"/>
+                </h3> :
+                <h3 className='todoTitle'>
+                    <EditableSpan lockEditMode={lockEditMode} changeTitle={changeTodoListTitle} title={todoListTitle}/>
+                    <IconButton onClick={removeTodoList} color='inherit'
+                                disabled={todoEntityStatus === 'buttonLoading'}>
+                        <DeleteForeverIcon fontSize="medium"/>
+                    </IconButton>
+                </h3>}
             <AddItemForm addItem={addTask} TodoEntityStatus={todoEntityStatus === 'buttonLoading'}/>
             {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} todoListId={todoListId} task={t}/>)}
             <div className='filterButtons'>

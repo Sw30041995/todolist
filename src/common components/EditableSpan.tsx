@@ -38,7 +38,10 @@ export const EditableSpan = ({title, lockEditMode, ...props}: PropsType) => {
                                    size='small' onKeyPress={onEnterPressHandler} autoFocus
                                    onBlur={changeTitle} onChange={onChangeTitleHandler} value={text}/> :
                 <span style={{pointerEvents: lockEditMode ? 'none' : 'auto'}} title='Double click to edit'
-                      onDoubleClick={() => setEditMode(true)}>{title}</span>}
+                      onDoubleClick={() => setEditMode(true)}
+                      onTouchStart={() => setEditMode(true)}>
+                    {title}
+                </span>}
         </>
     )
 }
