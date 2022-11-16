@@ -1,6 +1,6 @@
 import React, {ChangeEvent, memo} from 'react';
 import {EditableSpan} from "./EditableSpan";
-import {removeTask, TaskEntityStatusType, TaskType, updateTask} from "./reducers/tasksReducer";
+import {removeTask, TaskType, updateTask} from "./reducers/tasksReducer";
 import {useAppDispatch} from "./hooks";
 import {TaskStatuses} from "./todoListAPI/todoListAPI";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -10,20 +10,16 @@ import {Checkbox, IconButton} from "@mui/material";
 type PropsType = {
     todoListId: string
     task: TaskType
-    entityStatus: TaskEntityStatusType
 }
 
-export const Task = memo(({task, todoListId, entityStatus}: PropsType) => {
+export const Task = memo(({task, todoListId}: PropsType) => {
 
     const dispatch = useAppDispatch()
+    const lockEditMode = task.entityStatus === "buttonLoading"
 
-    const deleteTask = () => {
-        dispatch(removeTask(todoListId, task.id))
-    }
+    const deleteTask = () => dispatch(removeTask(todoListId, task.id))
 
-    const changeTaskTitle = (taskTitle: string) => {
-        dispatch(updateTask(todoListId, task.id, {title: taskTitle}))
-    }
+    const changeTaskTitle = (taskTitle: string) => dispatch(updateTask(todoListId, task.id, {title: taskTitle}))
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(updateTask(todoListId, task.id, {
@@ -34,12 +30,13 @@ export const Task = memo(({task, todoListId, entityStatus}: PropsType) => {
 
     return (
         <div>
-            {entityStatus === 'checkboxLoading' ?
+            {task.entityStatus === 'checkboxLoading' ?
                 <span className='loader'><CircularProgress size="1.1rem" color="inherit"/></span> :
-                <Checkbox onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed}
+                <Checkbox disabled={lockEditMode} onChange={onChangeHandler}
+                          checked={task.status === TaskStatuses.Completed}
                           color="secondary"/>}
-            <EditableSpan changeTitle={changeTaskTitle} title={task.title}/>
-            <IconButton onClick={deleteTask} color='inherit' disabled={entityStatus === 'buttonLoading'}>
+            <EditableSpan lockEditMode={lockEditMode} changeTitle={changeTaskTitle} title={task.title}/>
+            <IconButton onClick={deleteTask} color='inherit' disabled={task.entityStatus === 'buttonLoading'}>
                 <DeleteForeverIcon fontSize="small"/>
             </IconButton>
         </div>

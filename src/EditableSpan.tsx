@@ -4,9 +4,10 @@ import TextField from "@mui/material/TextField/TextField";
 type PropsType = {
     title: string
     changeTitle: (title: string) => void
+    lockEditMode: boolean
 }
 
-export const EditableSpan = ({title, ...props}: PropsType) => {
+export const EditableSpan = ({title, lockEditMode, ...props}: PropsType) => {
 
     const [editMode, setEditMode] = useState(false)
     const [text, setText] = useState(title)
@@ -36,7 +37,8 @@ export const EditableSpan = ({title, ...props}: PropsType) => {
                                    label={error ? 'Field cannot be empty' : 'Enter your text'} error={error}
                                    size='small' onKeyPress={onEnterPressHandler} autoFocus
                                    onBlur={changeTitle} onChange={onChangeTitleHandler} value={text}/> :
-                <span title='Double click to edit' onDoubleClick={() => setEditMode(true)}>{title}</span>}
+                <span style={{pointerEvents: lockEditMode ? 'none' : 'auto'}} title='Double click to edit'
+                      onDoubleClick={() => setEditMode(true)}>{title}</span>}
         </>
     )
 }

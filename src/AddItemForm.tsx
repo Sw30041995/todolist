@@ -5,10 +5,10 @@ import {IconButton} from "@mui/material";
 
 type PropsType = {
     addItem: (title: string) => void
-    entityTodoStatus?: boolean
+    TodoEntityStatus?: boolean
 }
 
-export const AddItemForm = ({addItem, entityTodoStatus}: PropsType) => {
+export const AddItemForm = ({addItem, TodoEntityStatus}: PropsType) => {
 
     const [title, setTitle] = useState('')
     const [error, setError] = useState(false)
@@ -33,7 +33,7 @@ export const AddItemForm = ({addItem, entityTodoStatus}: PropsType) => {
 
     return (
         <div>
-            <TextField disabled={entityTodoStatus} error={error} size='small'
+            <TextField disabled={TodoEntityStatus} error={error} size='small'
                        label={error ? 'Field cannot be empty' : 'Enter your text'}
                        color='secondary'
                        onKeyPress={onEnterPressHandler}

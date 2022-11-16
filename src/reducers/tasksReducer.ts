@@ -1,4 +1,3 @@
-import {v1} from "uuid";
 import {AddTodoListActionType, DeleteTodoListActionType} from "./todoListReducer";
 import {taskAPI, TaskResponseType, UpdateDomainTaskModelType, UpdateTaskModelType} from "../todoListAPI/todoListAPI";
 import {AppThunk} from "../store/store";
@@ -56,7 +55,7 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): in
             }
         }
         case "TODOLISTS/ADD-TODOLIST": {
-            return {...state, [v1()]: []}
+            return {...state, [action.payload.todoList.id]: []}
         }
         case "TODOLISTS/DELETE-TODOLIST": {
             delete state[action.payload.todoListId]
@@ -133,7 +132,7 @@ export const createTask = (todoListId: string, taskTitle: string): AppThunk => (
             dispatch(setAppStatusAC('idle'))
         })
 }
-//когда удаляем таску надо задизеблить чекбокс и возможность редактировать таску
+
 export const removeTask = (todoListId: string, taskId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     dispatch(changeEntityTaskStatus(todoListId, taskId, 'buttonLoading'))

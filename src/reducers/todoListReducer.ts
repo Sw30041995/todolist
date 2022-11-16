@@ -4,7 +4,7 @@ import {AppThunk} from "../store/store";
 import {setAppStatusAC, setErrorAC} from "./appReducer";
 
 export type TodoListsActionType = ChangeTodoListTitleActionType | AddTodoListActionType | DeleteTodoListActionType
-    | SetTodoListsActionType | ChangeEntityTodoStatusActionType
+    | SetTodoListsActionType | ChangeTodoEntityStatusActionType
 
 const initialState: initialStateType = []
 type initialStateType = TodoListType[]
@@ -40,14 +40,14 @@ type ChangeTodoListTitleActionType = ReturnType<typeof changeTodoListTitleAC>
 export type AddTodoListActionType = ReturnType<typeof addTodoListAC>
 export type DeleteTodoListActionType = ReturnType<typeof deleteTodoListAC>
 export type SetTodoListsActionType = ReturnType<typeof setTodoLists>
-export type ChangeEntityTodoStatusActionType = ReturnType<typeof changeEntityTodoStatus>
+export type ChangeTodoEntityStatusActionType = ReturnType<typeof changeTodoEntityStatus>
 
 
 export const changeTodoListTitleAC = (todoListId: string, todoListTitle: string) => ({type: 'TODOLISTS/CHANGE-TODOLISTS-TITLE', payload: {todoListId, todoListTitle}} as const)
 export const addTodoListAC = (todoList: TodoListResponseType) => ({type: 'TODOLISTS/ADD-TODOLIST', payload: {todoList}} as const)
 export const deleteTodoListAC = (todoListId: string) => ({type: 'TODOLISTS/DELETE-TODOLIST', payload: {todoListId}} as const)
 export const setTodoLists = (todoLists: TodoListResponseType[]) => ({type: 'TODOLISTS/SET-TODOLISTS', payload: {todoLists}} as const)
-export const changeEntityTodoStatus = (todoListId: string, entityStatus: TodoEntityStatusType) => ({type: 'TODOLISTS/CHANGE-ENTITY-STATUS', payload: {todoListId,entityStatus}} as const)
+export const changeTodoEntityStatus = (todoListId: string, entityStatus: TodoEntityStatusType) => ({type: 'TODOLISTS/CHANGE-ENTITY-STATUS', payload: {todoListId,entityStatus}} as const)
 
 export const getTodoLists = (): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC("loading"))
@@ -80,14 +80,14 @@ export const createTodoList = (todoListTitle: string): AppThunk => (dispatch) =>
             dispatch(setAppStatusAC('idle'))
         })
 }
-//когда удаляем тодо надо задизеблить возможность редактировать таску
+
 export const deleteTodoList = (todoListId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    dispatch(changeEntityTodoStatus(todoListId, 'buttonLoading'))
+    dispatch(changeTodoEntityStatus(todoListId, 'buttonLoading'))
     todoListAPI.deleteTodoList(todoListId)
         .then(() => {
             dispatch(deleteTodoListAC(todoListId))
-            dispatch(changeEntityTodoStatus(todoListId, 'idle'))
+            dispatch(changeTodoEntityStatus(todoListId, 'idle'))
         })
         .catch(e => {
             dispatch(setErrorAC(e.message))
@@ -98,7 +98,7 @@ export const deleteTodoList = (todoListId: string): AppThunk => (dispatch) => {
 }
 
 export const updateTodoListTitle = (todoListId: string, todoListTitle: string): AppThunk => (dispatch) => {
-    dispatch(changeEntityTodoStatus(todoListId, 'titleLoading'))
+    dispatch(changeTodoEntityStatus(todoListId, 'titleLoading'))
     todoListAPI.updateTodoListTitle(todoListId, todoListTitle)
         .then(() => {
             dispatch(changeTodoListTitleAC(todoListId, todoListTitle))
@@ -107,6 +107,6 @@ export const updateTodoListTitle = (todoListId: string, todoListTitle: string): 
             dispatch(setErrorAC(e.message))
         })
         .finally(() => {
-            dispatch(changeEntityTodoStatus(todoListId, 'idle'))
+            dispatch(changeTodoEntityStatus(todoListId, 'idle'))
         })
 }

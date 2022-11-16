@@ -17,9 +17,7 @@ export const TodoListsList = () => {
         }
     }, [])
 
-    const addTodoList = (todoListTitle: string) => {
-        dispatch(createTodoList(todoListTitle))
-    }
+    const addTodoList = (todoListTitle: string) => dispatch(createTodoList(todoListTitle))
 
     if (!isLoggedIn) {
         return <Navigate to='/login'/>
@@ -32,7 +30,7 @@ export const TodoListsList = () => {
             </div>
             <div className='todoLists'>
                 {todoLists.map(tl => <TodoList key={tl.id} todoListTitle={tl.title} todoListId={tl.id}
-                                               entityTodoStatus={tl.entityStatus}/>)}
+                                               todoEntityStatus={tl.entityStatus}/>)}
             </div>
         </div>
     )

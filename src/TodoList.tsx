@@ -16,10 +16,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 type PropsType = {
     todoListTitle: string
     todoListId: string
-    entityTodoStatus: TodoEntityStatusType
+    todoEntityStatus: TodoEntityStatusType
 }
 
-export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsType) => {
+export const TodoList = ({todoListId, todoListTitle, todoEntityStatus}: PropsType) => {
 
     useEffect(() => {
         dispatch(getTasks(todoListId))
@@ -27,22 +27,15 @@ export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsTyp
 
     const dispatch = useAppDispatch()
     const tasks = useAppSelector(state => state.tasks)
+    const lockEditMode = todoEntityStatus === "buttonLoading"
 
     const [tasksFilter, setTasksFilter] = useState<FilterValueType>('all')
 
-    const addTask = (taskTitle: string) => {
-        dispatch(createTask(todoListId, taskTitle))
-    }
-    const changeTaskFilter = (filter: FilterValueType) => {
-        setTasksFilter(filter)
-    }
+    const addTask = (taskTitle: string) => dispatch(createTask(todoListId, taskTitle))
+    const changeTaskFilter = (filter: FilterValueType) => setTasksFilter(filter)
 
-    const removeTodoList = () => {
-        dispatch(deleteTodoList(todoListId))
-    }
-    const changeTodoListTitle = (todoListTitle: string) => {
-        dispatch(updateTodoListTitle(todoListId, todoListTitle))
-    }
+    const removeTodoList = () => dispatch(deleteTodoList(todoListId))
+    const changeTodoListTitle = (todoListTitle: string) => dispatch(updateTodoListTitle(todoListId, todoListTitle))
 
     let tasksForTodoLists = tasks[todoListId]
     if (tasksFilter === 'active') {
@@ -53,18 +46,19 @@ export const TodoList = ({todoListId, todoListTitle, entityTodoStatus}: PropsTyp
 
     return (
         <div className='todoList'>
-            {entityTodoStatus === 'titleLoading' ?
-                <h3 className='todoLoader'><CircularProgress size="1.5rem" color="inherit"/></h3> :
-                <h3 className='todoTitle'>
-                    <EditableSpan changeTitle={changeTodoListTitle} title={todoListTitle}/>
-                    <IconButton onClick={removeTodoList} color='inherit'
-                                disabled={entityTodoStatus === 'buttonLoading'}>
-                        <DeleteForeverIcon fontSize="medium"/>
-                    </IconButton>
-                </h3>}
-            <AddItemForm addItem={addTask} entityTodoStatus={entityTodoStatus === 'buttonLoading'}/>
-            {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} entityStatus={t.entityStatus}
-                                                                   todoListId={todoListId} task={t}/>)}
+                {todoEntityStatus === 'titleLoading' ?
+                    <h3 className='todoLoader'>
+                        <CircularProgress size="1.5rem" color="inherit"/>
+                    </h3> :
+                    <h3 className='todoTitle'>
+                        <EditableSpan lockEditMode={lockEditMode} changeTitle={changeTodoListTitle} title={todoListTitle}/>
+                        <IconButton onClick={removeTodoList} color='inherit'
+                                    disabled={todoEntityStatus === 'buttonLoading'}>
+                            <DeleteForeverIcon fontSize="medium"/>
+                        </IconButton>
+                    </h3>}
+            <AddItemForm addItem={addTask} TodoEntityStatus={todoEntityStatus === 'buttonLoading'}/>
+            {tasksForTodoLists && tasksForTodoLists.map(t => <Task key={t.id} todoListId={todoListId} task={t}/>)}
             <div className='filterButtons'>
                 <ButtonGroup size='small' color="secondary">
                     <Button variant={tasksFilter === "all" ? 'contained' : 'outlined'}

@@ -50,29 +50,34 @@ export const Login = () => {
     }
 
     return (
-        <div className='login'>
+        <div>
             <form className='form' onSubmit={formik.handleSubmit}>
 
                 <label htmlFor="email">Email Address:</label>
-                <TextField required color='secondary' id="email" type="email"
-                           label='Email'
-                           {...formik.getFieldProps('email')}/>
-                {formik.touched.email && formik.errors.email &&
-                <span style={{color: 'red'}}>{formik.errors.email}</span>}
+                <div className='inputBlock'>
+                    <TextField color='secondary' id="email" type="text" label='Email'
+                               {...formik.getFieldProps('email')}/>
+                    {formik.touched.email && formik.errors.email &&
+                    <span className='loginError'>{formik.errors.email}</span>}
+                </div>
+
 
                 <label htmlFor="password">Password:</label>
-                <TextField color='secondary' id="password" type="password"
-                           label='Password'
-                           {...formik.getFieldProps('password')}/>
-                {formik.touched.password && formik.errors.password &&
-                <span style={{color: 'red'}}>{formik.errors.password}</span>}
+                <div className='inputBlock'>
+                    <TextField color='secondary' id="password" type="password" label='Password'
+                               {...formik.getFieldProps('password')}/>
+                    {formik.touched.password && formik.errors.password &&
+                    <span className='loginError'>{formik.errors.password}</span>}
+                </div>
 
-                <label htmlFor="rememberMe">Remember me:</label>
-                <Checkbox color="secondary" id="rememberMe" name="rememberMe"
-                          onChange={formik.handleChange}
-                          checked={formik.values.rememberMe}/>
+                <div className='checkboxBlock'>
+                    <label htmlFor="rememberMe">Remember me:</label>
+                    <Checkbox color="secondary" id="rememberMe" name="rememberMe"
+                              onChange={formik.handleChange}
+                              checked={formik.values.rememberMe}/>
+                </div>
 
-                <Button variant="contained" size="small" color='secondary' type="submit">Login</Button>
+                <Button variant="contained" color='secondary' type="submit">Login</Button>
 
             </form>
         </div>
