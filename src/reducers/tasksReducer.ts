@@ -107,10 +107,12 @@ export const getTasks = (todoListId: string): AppThunk => (dispatch) => {
     taskAPI.getTasks(todoListId)
         .then(res => {
             dispatch(setTasks(todoListId, res.data.items))
-            dispatch(setAppStatusAC("succeeded"))
         })
         .catch(e => {
             dispatch(setErrorAC(e.message))
+        })
+        .finally(() => {
+            dispatch(setAppStatusAC("idle"))
         })
 }
 
@@ -131,16 +133,20 @@ export const createTask = (todoListId: string, taskTitle: string): AppThunk => (
             dispatch(setAppStatusAC('idle'))
         })
 }
-
+//когда удаляем таску надо задизеблить чекбокс и возможность редактировать таску
 export const removeTask = (todoListId: string, taskId: string): AppThunk => (dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     dispatch(changeEntityTaskStatus(todoListId, taskId, 'buttonLoading'))
     taskAPI.deleteTask(todoListId, taskId)
         .then(() => {
             dispatch(deleteTaskAC(todoListId, taskId))
-            dispatch(changeEntityTaskStatus(todoListId, taskId, 'idle'))
         })
         .catch(e => {
             dispatch(setErrorAC(e.message))
+        })
+        .finally(() => {
+            dispatch(setAppStatusAC('idle'))
+            dispatch(changeEntityTaskStatus(todoListId, taskId, 'idle'))
         })
 }
 

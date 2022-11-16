@@ -37,7 +37,19 @@ export const taskAPI = {
         return instance.delete<ResponseType>(`todo-lists/${todoListId}/tasks/${taskId}`)
     },
     updateTask(todoListId: string, taskId: string, taskData: UpdateTaskModelType) {
-        return instance.put<UpdateTaskModelType, AxiosResponse<ResponseType<{item: TaskResponseType}>>>(`todo-lists/${todoListId}/tasks/${taskId}`, taskData)
+        return instance.put<UpdateTaskModelType, AxiosResponse<ResponseType<{ item: TaskResponseType }>>>(`todo-lists/${todoListId}/tasks/${taskId}`, taskData)
+    }
+}
+
+export const authAPI = {
+    login(loginData: LoginDataType) {
+        return instance.post<LoginDataType, AxiosResponse<ResponseType<{ userId: number }>>>('auth/login', loginData)
+    },
+    logout() {
+        return instance.delete<ResponseType>('auth/login')
+    },
+    me() {
+        return instance.get<ResponseType<MeDataType>>('auth/me')
     }
 }
 
@@ -101,4 +113,17 @@ export enum TaskPriorities {
     Hi = 2,
     Urgently = 3,
     Later = 4
+}
+
+export type LoginDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
+export type MeDataType = {
+    id: number
+    email: string
+    login: string
 }

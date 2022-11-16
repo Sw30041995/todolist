@@ -2,7 +2,7 @@ export type AppActionType = SetAppStatusActionType | SetErrorActionType
 type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
 const initialState: initialStateType = {
-    status: 'loading',
+    status: 'idle',
     error: ''
 }
 

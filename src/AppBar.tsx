@@ -1,10 +1,17 @@
 import React from 'react';
-import {NavLink} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "./hooks";
+import {logoutTC} from "./reducers/authReducer";
 
 export const AppBar = () => {
+
+    const dispatch = useAppDispatch()
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+
+    const logout = () => dispatch(logoutTC())
+
     return (
         <header className='header'>
-            <NavLink to='/login'><h2>Login</h2></NavLink>
+            {isLoggedIn && <h2 onClick={logout}>Logout</h2>}
         </header>
     )
 }

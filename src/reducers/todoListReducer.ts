@@ -62,6 +62,7 @@ export const getTodoLists = (): AppThunk => (dispatch) => {
             dispatch(setAppStatusAC('idle'))
         })
 }
+
 export const createTodoList = (todoListTitle: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     todoListAPI.createTodoList(todoListTitle)
@@ -79,6 +80,7 @@ export const createTodoList = (todoListTitle: string): AppThunk => (dispatch) =>
             dispatch(setAppStatusAC('idle'))
         })
 }
+//когда удаляем тодо надо задизеблить возможность редактировать таску
 export const deleteTodoList = (todoListId: string): AppThunk => (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     dispatch(changeEntityTodoStatus(todoListId, 'buttonLoading'))
@@ -94,6 +96,7 @@ export const deleteTodoList = (todoListId: string): AppThunk => (dispatch) => {
             dispatch(setAppStatusAC('idle'))
         })
 }
+
 export const updateTodoListTitle = (todoListId: string, todoListTitle: string): AppThunk => (dispatch) => {
     dispatch(changeEntityTodoStatus(todoListId, 'titleLoading'))
     todoListAPI.updateTodoListTitle(todoListId, todoListTitle)
