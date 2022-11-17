@@ -58,7 +58,7 @@ export const Login = () => {
 
                 <label htmlFor="email">Email Address:</label>
                 <div className='inputBlock'>
-                    <TextField required color='secondary' id="email" type="text" label='Email'
+                    <TextField color='secondary' id="email" type="text" label='Email'
                                {...formik.getFieldProps('email')}/>
                     {formik.touched.email && formik.errors.email &&
                     <span className='loginError'>{formik.errors.email}</span>}
